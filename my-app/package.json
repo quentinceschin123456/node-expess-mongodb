@@ -1,0 +1,19 @@
+{
+    "name": "minitp1",
+    "version": "1.0.0",
+    "description": "mini tp 1",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/quentinceschin123456/node-expess-mongodb.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/quentinceschin123456/node-expess-mongodb/issues"
+    },
+    "homepage": "https://github.com/quentinceschin123456/node-expess-mongodb#readme"
+}
