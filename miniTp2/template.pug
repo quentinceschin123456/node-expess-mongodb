@@ -5,10 +5,10 @@ html(lang="en")
   body
     h1= pageH1
     table
-        tr 
+        tr
             th Identifiant
-            th Ville 
-            each person in list
-                tr 
-                each user,city in person
-                    td=val
+            th Ville
+    - for (var x = 0; x < list.length; x++)
+        tr
+            td=list[x]["user"]
+            td=list[x]["city"]
