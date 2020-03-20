@@ -33,22 +33,24 @@ const server = http.createServer(
         FileReader.readFile(filePath, "utf8", (err, data) => {
             if (err) {
                 console.error(err);
+                res.setHeader('Content-Type', 'text/html');
+                res.end()
+                res.statusCode = 200;
             } else {
-                console.log(data);
                 table = parse(data);
-                console.log(table)
+                const generatedTemplate = compiledFunction({
+                    list: table,
+                    PageTitle: "My server",
+                    pageH1: "Voici le contenu du fichier"
+                })
+                res.setHeader('Content-Type', 'text/html');
+                res.end(generatedTemplate)
+                res.statusCode = 200;
             }
         });
 
-        res.statusCode = 200;
-        res.setHeader('Content-Type', 'text/html');
 
-        const generatedTemplate = compiledFunction({
-            list: table,
-            PageTitle: "My server",
-            pageH1: "Voici le contenu du fichier"
-        })
-        res.end(generatedTemplate)
+
     }
 )
 

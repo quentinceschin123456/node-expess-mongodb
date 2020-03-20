@@ -8,7 +8,7 @@ html(lang="en")
         tr
             th Identifiant
             th Ville
-    - for (var x = 0; x < list.length; x++)
-        tr
-            td=list[x]["user"]
-            td=list[x]["city"]
+        each personne in list
+            tr
+            each attr in personne
+                td= attr
