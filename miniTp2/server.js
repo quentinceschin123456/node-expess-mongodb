@@ -5,6 +5,19 @@ const compiledFunction = pug.compileFile("template.pug")
 
 var FileReader = require("fs");
 
+function parse(data) {
+    var json = {}
+    var dataRaw = data.split("\n");
+    var i = 0;
+    dataRaw.forEach(raw => {
+        json[i] = {
+            "user": raw.split(";")[0],
+            "city": raw.split(";")[1]
+        }
+        i++;
+    });
+    return json;
+}
 
 const server = http.createServer(
     (req, res) => {
@@ -14,13 +27,16 @@ const server = http.createServer(
         console.log(res.data)
 
         // var filePath = '.' + req.url;
+
         var filePath = "./data.csv";
+        RegExp(/.svg/g).test(req.url) ? filePath = "." + req.url : "";
         FileReader.readFile(filePath, "utf8", (err, data) => {
             if (err) {
                 console.error(err);
             } else {
                 console.log(data);
-                table = data;
+                table = parse(data);
+                console.log(table)
             }
         });
 
@@ -28,7 +44,9 @@ const server = http.createServer(
         res.setHeader('Content-Type', 'text/html');
 
         const generatedTemplate = compiledFunction({
-            list: table
+            list: table,
+            PageTitle: "My server",
+            pageH1: "Voici le contenu du fichier"
         })
         res.end(generatedTemplate)
     }
