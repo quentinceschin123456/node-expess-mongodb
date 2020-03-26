@@ -1,5 +1,6 @@
 const express = require("express");
 const app = express();
+const path = require('path');
 const port = 3000;
 
 const pug = require("pug");
@@ -7,7 +8,7 @@ const compiledFunction = pug.compileFile("template.pug")
 var FileReader = require("fs");
 
 
-app.use(express.static("static"));
+app.use(express.static(path.join(__dirname, "/static")));
 
 function parse(data) {
     var json = {}
@@ -25,12 +26,12 @@ function parse(data) {
 
 app.get('/', (req, res) => {
     var pathParam = req.param('path', 'data.csv');
-    FileReader.readFile(pathParam, "utf8", (err, data) => {
+    FileReader.readFile(path.join(__dirname + '/static/', pathParam), "utf8", (err, data) => {
         if (err) {
             console.error(err);
             res.setHeader('Content-Type', 'text/html');
+            res.statusCode = 404;
             res.end()
-            res.statusCode = 200;
         } else {
             table = parse(data);
             const generatedTemplate = compiledFunction({
@@ -39,8 +40,8 @@ app.get('/', (req, res) => {
                 pageH1: "Voici le contenu du fichier"
             })
             res.setHeader('Content-Type', 'text/html');
-            res.end(generatedTemplate)
             res.statusCode = 200;
+            res.end(generatedTemplate)
         }
     })
 });
