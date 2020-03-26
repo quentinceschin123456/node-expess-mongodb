@@ -1,9 +1,13 @@
-const http = require("http");
-const pug = require("pug");
+const express = require("express");
+const app = express();
 const port = 3000;
-const compiledFunction = pug.compileFile("template.pug")
 
+const pug = require("pug");
+const compiledFunction = pug.compileFile("template.pug")
 var FileReader = require("fs");
+
+
+app.use(express.static("static"));
 
 function parse(data) {
     var json = {}
@@ -19,44 +23,28 @@ function parse(data) {
     return json;
 }
 
-const server = http.createServer(
-    (req, res) => {
-        var table = [];
+app.get('/', (req, res) => {
+    var pathParam = req.param('path', 'data.csv');
+    FileReader.readFile(pathParam, "utf8", (err, data) => {
+        if (err) {
+            console.error(err);
+            res.setHeader('Content-Type', 'text/html');
+            res.end()
+            res.statusCode = 200;
+        } else {
+            table = parse(data);
+            const generatedTemplate = compiledFunction({
+                list: table,
+                PageTitle: "My server",
+                pageH1: "Voici le contenu du fichier"
+            })
+            res.setHeader('Content-Type', 'text/html');
+            res.end(generatedTemplate)
+            res.statusCode = 200;
+        }
+    })
+});
 
-        console.log(req.url, req.url.split('/')[req.url.length - 1])
-        console.log(res.data)
-
-        // var filePath = '.' + req.url;
-
-        var filePath = "./data.csv";
-        RegExp(/.svg/g).test(req.url) ? filePath = "." + req.url : "";
-        FileReader.readFile(filePath, "utf8", (err, data) => {
-            if (err) {
-                console.error(err);
-                res.setHeader('Content-Type', 'text/html');
-                res.end()
-                res.statusCode = 200;
-            } else {
-                table = parse(data);
-                const generatedTemplate = compiledFunction({
-                    list: table,
-                    PageTitle: "My server",
-                    pageH1: "Voici le contenu du fichier"
-                })
-                res.setHeader('Content-Type', 'text/html');
-                res.end(generatedTemplate)
-                res.statusCode = 200;
-            }
-        });
-
-
-
-    }
-)
-
-
-
-
-server.listen(port, () => {
+app.listen(port, () => {
     console.log(`Server running at port ${port}`);
 })
