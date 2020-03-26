@@ -1,0 +1,14 @@
+doctype html
+html(lang="en")
+  head
+    title= pageTitle
+  body
+    h1= pageH1
+    table
+        tr
+            th Identifiant
+            th Ville
+        each personne in list
+            tr
+            each attr in personne
+                td= attr
