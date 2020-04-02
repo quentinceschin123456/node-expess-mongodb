@@ -71,6 +71,18 @@ app.put('/city/:id', (req, res) => {
         res.statusCode = 400;
         res.end()
     }
+    if (req.body.name !== undefined || req.body.name !== null) {
+
+        City.findByIdAndUpdate(cityId, req.body, (err) => {
+            if (err) return console.error(err);
+            City.find((err, cities) => {
+                if (err) return console.error(err);
+                console.log(cities)
+                templateVar.list = JSON.parse(JSON.stringify(cities));
+                res.render('template', templateVar)
+            })
+        })
+    }
 
 });
 app.delete('/city/:id', (req, res) => {
