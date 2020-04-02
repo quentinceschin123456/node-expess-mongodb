@@ -89,17 +89,22 @@ app.post('/city', bodyParser.json(), (req, res) => {
                     name: req.body.name
                 }
                 var store = JSON.parse(data)
-
-                console.log(store.cities, "addd", store.cities.push(json), "string")
-                FileReader.writeFile(filePath, store.cities, function(err) {
+                console.log("cities ", store.cities)
+                store.cities.push(json)
+                console.log("add", store.cities)
+                FileReader.writeFile(filePath, JSON.stringify(store), function(err) {
                     if (err) {
 
-                        throw err
-                    };
-                    res.setHeader('Content-Type', 'text/html');
-                    res.statusCode = 200;
+                        console.log(err)
+                    } else {
+                        console.log(data)
+                        templateVar.list = JSON.parse(data).cities
+                        res.setHeader('Content-Type', 'text/html');
+                        res.statusCode = 200;
 
-                    res.render('template', templateVar)
+                        res.render('template', templateVar)
+                    }
+
                 });
             }
 
