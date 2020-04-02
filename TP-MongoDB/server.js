@@ -75,6 +75,7 @@ app.put('/city/:id', (req, res) => {
 });
 app.delete('/city/:id', (req, res) => {
     var cityId = req.params && req.params.id ? req.params.id : null;
+    console.log("id", cityId)
     if (cityId == null) {
         console.log("bad request, no id found")
         res.setHeader('Content-Type', 'text/html');
@@ -83,44 +84,16 @@ app.delete('/city/:id', (req, res) => {
     }
 
     // lecture json
-    FileReader.readFile(filePath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            res.setHeader('Content-Type', 'text/html');
-            res.statusCode = 404;
-            res.end()
-        } else {
-            if (req.body.name !== undefined || req.body.name !== null) {
-                var store = JSON.parse(data)
-                console.log("cities ", store.cities)
-                console.log("param", cityId)
-                var index = '-1'
-                store.cities.forEach(city => {
-                    if (city.id == cityId) {
-                        index = store.cities.indexOf(city);
-                        console.log(" DANS LE FOR", city, store.cities.indexOf(city))
-                    }
-                });
-                console.log(index)
-                index != -1 ? store.cities.splice(index, 1) : '';
-                console.log("rm", store.cities)
-                FileReader.writeFile(filePath, JSON.stringify(store), function(err) {
-                    if (err) {
+    City.deleteOne({ _id: cityId }, (err) => {
+        if (err) return console.error(err);
+        City.find((err, cities) => {
+            if (err) return console.error(err);
+            console.log(cities)
+            templateVar.list = JSON.parse(JSON.stringify(cities));
+            res.render('template', templateVar)
+        })
 
-                        console.log(err)
-                    } else {
-                        console.log(data)
-                        templateVar.list = JSON.parse(data).cities
-                        res.setHeader('Content-Type', 'text/html');
-                        res.statusCode = 200;
-
-                        res.render('template', templateVar)
-                    }
-
-                });
-            }
-        }
-    });
+    })
 });
 
 
