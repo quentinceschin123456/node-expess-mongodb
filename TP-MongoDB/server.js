@@ -48,52 +48,20 @@ app.get('/cities', (req, res) => {
 });
 
 app.post('/city', bodyParser.json(), (req, res) => {
-    FileReader.readFile(filePath, "utf8", (err, data) => {
-        if (err) {
-            console.error(err);
-            if (req.body.name !== undefined || req.body.name !== null) {
-                var json = {
-                    "id": uuidv4(),
-                    'name': req.body.name
-                }
-                FileReader.appendFile(filePath, JSON.stringify(json), function(err) {
-                    if (err) throw err;
-                    console.log('Saved!');
-                });
-            }
 
+    if (req.body.name !== undefined || req.body.name !== null) {
+        const newCity = new City({ name: req.body.name })
+        newCity.save((err) => {
+            if (err) return console.error(err);
+            City.find((err, cities) => {
+                if (err) return console.error(err);
+                console.log(cities)
+                templateVar.list = JSON.parse(JSON.stringify(cities));
+                res.render('template', templateVar)
+            })
+        })
+    }
 
-            res.setHeader('Content-Type', 'text/html');
-            res.statusCode = 404;
-            res.end()
-        } else {
-            if (req.body.name !== undefined || req.body.name !== null) {
-                var json = {
-                    id: uuidv4(),
-                    name: req.body.name
-                }
-                var store = JSON.parse(data)
-                console.log("cities ", store.cities)
-                store.cities.push(json)
-                console.log("add", store.cities)
-                FileReader.writeFile(filePath, JSON.stringify(store), function(err) {
-                    if (err) {
-
-                        console.log(err)
-                    } else {
-                        console.log(data)
-                        templateVar.list = JSON.parse(data).cities
-                        res.setHeader('Content-Type', 'text/html');
-                        res.statusCode = 200;
-
-                        res.render('template', templateVar)
-                    }
-
-                });
-            }
-
-        }
-    })
 });
 app.put('/city/:id', (req, res) => {
     var cityId = req.params && req.params.id ? req.params.id : null;
