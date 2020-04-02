@@ -89,17 +89,22 @@ app.post('/city', bodyParser.json(), (req, res) => {
                     name: req.body.name
                 }
                 var store = JSON.parse(data)
-
-                console.log(store.cities, "addd", store.cities.push(json), "string")
-                FileReader.writeFile(filePath, store.cities, function(err) {
+                console.log("cities ", store.cities)
+                store.cities.push(json)
+                console.log("add", store.cities)
+                FileReader.writeFile(filePath, JSON.stringify(store), function(err) {
                     if (err) {
 
-                        throw err
-                    };
-                    res.setHeader('Content-Type', 'text/html');
-                    res.statusCode = 200;
+                        console.log(err)
+                    } else {
+                        console.log(data)
+                        templateVar.list = JSON.parse(data).cities
+                        res.setHeader('Content-Type', 'text/html');
+                        res.statusCode = 200;
 
-                    res.render('template', templateVar)
+                        res.render('template', templateVar)
+                    }
+
                 });
             }
 
@@ -107,11 +112,65 @@ app.post('/city', bodyParser.json(), (req, res) => {
     })
 });
 app.put('/city/:id', (req, res) => {
+    var cityId = req.params && req.params.id ? req.params.id : null;
+    if (cityId == null) {
+        console.log("bad request, no id found")
+        res.setHeader('Content-Type', 'text/html');
+        res.statusCode = 400;
+        res.end()
+    }
 
 });
-app.delete('', (req, res) => {
+app.delete('/city/:id', (req, res) => {
+    var cityId = req.params && req.params.id ? req.params.id : null;
+    if (cityId == null) {
+        console.log("bad request, no id found")
+        res.setHeader('Content-Type', 'text/html');
+        res.statusCode = 400;
+        res.end()
+    }
 
+    // lecture json
+    FileReader.readFile(filePath, "utf8", (err, data) => {
+        if (err) {
+            console.error(err);
+            res.setHeader('Content-Type', 'text/html');
+            res.statusCode = 404;
+            res.end()
+        } else {
+            if (req.body.name !== undefined || req.body.name !== null) {
+                var store = JSON.parse(data)
+                console.log("cities ", store.cities)
+                console.log("param", cityId)
+                var index = '-1'
+                store.cities.forEach(city => {
+                    if (city.id == cityId) {
+                        index = store.cities.indexOf(city);
+                        console.log(" DANS LE FOR", city, store.cities.indexOf(city))
+                    }
+                });
+                console.log(index)
+                index != -1 ? store.cities.splice(index, 1) : '';
+                console.log("rm", store.cities)
+                FileReader.writeFile(filePath, JSON.stringify(store), function(err) {
+                    if (err) {
+
+                        console.log(err)
+                    } else {
+                        console.log(data)
+                        templateVar.list = JSON.parse(data).cities
+                        res.setHeader('Content-Type', 'text/html');
+                        res.statusCode = 200;
+
+                        res.render('template', templateVar)
+                    }
+
+                });
+            }
+        }
+    });
 });
+
 
 app.listen(port, () => {
     console.log(`Server running at port ${port}`);

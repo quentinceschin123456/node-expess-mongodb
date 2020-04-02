@@ -1,6 +1,1 @@
-{
-    "cities": [
-        { "id": "0", "name": "Toulouse" },
-        { "id": "1", "name": "Albi" }
-    ]
-}[object Object],[object Object],[object Object]
+{"cities":[{"id":"0","name":"Toulouse"},{"id":"9c5fa88f-eeb5-4804-869a-3fdf6120e05e","name":"test"},{"id":"b58626e3-f079-4abe-9bd3-762630e0cb51","name":"test"},{"id":"9a4ff4bd-b0d5-4fd9-9c4a-04cccc520abf","name":"test"}]}
