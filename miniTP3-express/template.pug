@@ -12,3 +12,9 @@ html(lang="en")
             tr
             each attr in personne
                 td= attr
+        tr
+          form(action="/city", method="post")
+            label(for="name") Nom de la ville
+            input(type="text" name="name")
+            button(type="submit") Envoyer
+

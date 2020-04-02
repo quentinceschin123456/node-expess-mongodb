@@ -3,6 +3,7 @@ const app = express();
 const path = require('path');
 const port = 3000;
 const bodyParser = require("body-parser");
+app.use(express.urlencoded())
 
 const uuidv4 = require("uuid/v4");
 
@@ -41,25 +42,33 @@ app.get('/', (req, res) => {
 app.get('/cities', (req, res) => {
     City.find((err, cities) => {
         if (err) return console.error(err);
-        console.log(cities)
+        //console.log(cities)
         templateVar.list = JSON.parse(JSON.stringify(cities));
         res.render('template', templateVar)
     })
 });
 
 app.post('/city', bodyParser.json(), (req, res) => {
-
+    console.log(req.body.name, req.body)
     if (req.body.name !== undefined || req.body.name !== null) {
-        const newCity = new City({ name: req.body.name })
-        newCity.save((err) => {
+        City.findOne({ name: req.body.name }, (err, city) => {
             if (err) return console.error(err);
-            City.find((err, cities) => {
-                if (err) return console.error(err);
-                console.log(cities)
-                templateVar.list = JSON.parse(JSON.stringify(cities));
-                res.render('template', templateVar)
-            })
+            console.log(city)
+            if (city == null) {
+                const newCity = new City({ name: req.body.name })
+                newCity.save((err) => {
+                    if (err) return console.error(err);
+                    City.find((err, cities) => {
+                        if (err) return console.error(err);
+                        //console.log(cities)
+                        templateVar.list = JSON.parse(JSON.stringify(cities));
+                        res.render('template', templateVar)
+                    })
+                })
+            }
+
         })
+
     }
 
 });
@@ -100,7 +109,7 @@ app.delete('/city/:id', (req, res) => {
         if (err) return console.error(err);
         City.find((err, cities) => {
             if (err) return console.error(err);
-            console.log(cities)
+            //console.log(cities)
             templateVar.list = JSON.parse(JSON.stringify(cities));
             res.render('template', templateVar)
         })
