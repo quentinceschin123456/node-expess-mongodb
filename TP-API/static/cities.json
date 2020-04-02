@@ -1,1 +1,1 @@
-{"cities":[{"id":"0","name":"Toulouse"},{"id":"9c5fa88f-eeb5-4804-869a-3fdf6120e05e","name":"test"},{"id":"b58626e3-f079-4abe-9bd3-762630e0cb51","name":"test"},{"id":"9a4ff4bd-b0d5-4fd9-9c4a-04cccc520abf","name":"test"}]}
+{ "cities": [{ "id": "0", "name": "Toulouse" }, { "id": "1", "name": "Albi" }, { "id": "2030aa3a-23d8-4f58-8f7c-4fd149aec8ef", "name": "test" }, { "id": "bb4b54be-4098-4e72-8b1e-231938ce31c9", "name": "test" }, { "id": "47a31524-7477-445e-a760-2939ff04878e", "name": "test" }, { "id": "6fc9754a-251c-422e-b1ed-ecd375d119c9", "name": "test" }] }
