@@ -120,6 +120,39 @@ app.put('/city/:id', (req, res) => {
         res.end()
     }
 
+    FileReader.readFile(filePath, "utf8", (err, data) => {
+        if (err) {
+            console.error(err);
+
+            res.setHeader('Content-Type', 'text/html');
+            res.statusCode = 404;
+            res.end()
+        } else {
+            if (req.body.name !== undefined || req.body.name !== null) {
+
+                var store = JSON.parse(data)
+                console.log("cities ", store.cities)
+                store.cities[cityId].name = req.body.name;
+                console.log("add", store.cities)
+                FileReader.writeFile(filePath, JSON.stringify(store), function(err) {
+                    if (err) {
+
+                        console.log(err)
+                    } else {
+                        console.log(data)
+                        templateVar.list = JSON.parse(data).cities
+                        res.setHeader('Content-Type', 'text/html');
+                        res.statusCode = 200;
+
+                        res.render('template', templateVar)
+                    }
+
+                });
+            }
+
+        }
+    })
+
 });
 app.delete('/city/:id', (req, res) => {
     var cityId = req.params && req.params.id ? req.params.id : null;

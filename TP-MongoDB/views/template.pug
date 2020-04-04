@@ -8,10 +8,12 @@ html(lang="en")
         tr
             th Identifiant
             th Ville
-        each personne in list
+        each city in list
             tr
-            each attr in personne
-                td= attr
+            td= city._id
+            td= city.name
+            td 
+              button(onclick="editItem(#{city.id})", title="Edit") Modifier
     div
       label Ajout d'une nouvelle ville
       form(action="/city", method="post")
