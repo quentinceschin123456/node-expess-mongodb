@@ -72,6 +72,7 @@ app.post('/city', bodyParser.json(), (req, res) => {
 
 });
 app.put('/city/:id', (req, res) => {
+    console.log("PUT")
     var cityId = req.params && req.params.id ? req.params.id : null;
     if (cityId == null) {
         console.log("bad request, no id found")
@@ -80,7 +81,8 @@ app.put('/city/:id', (req, res) => {
         res.end()
     }
     if (req.body.name !== undefined || req.body.name !== null) {
-
+        console.log(req.body)
+        console.log("req", req)
         City.findByIdAndUpdate(cityId, req.body, (err) => {
             if (err) return console.error(err);
             City.find((err, cities) => {
